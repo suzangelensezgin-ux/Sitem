@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suzan Gelen Sezgin | Ar-Ge & Mevzuat Danışmanlığı</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        navy: {
+                            800: '#1a2e4c',
+                            900: '#0a192f',
+                        },
+                        gold: {
+                            400: '#e8c44a',
+                            500: '#d4af37',
+                            600: '#b8950f',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Parallax-like hero overlay */
+        .hero-overlay {
+            background: linear-gradient(
+                135deg,
+                rgba(10, 25, 47, 0.92) 0%,
+                rgba(10, 25, 47, 0.70) 50%,
+                rgba(10, 25, 47, 0.85) 100%
+            );
+        }
+
+        /* Gold accent line */
+        .gold-line::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: #d4af37;
+            margin-bottom: 16px;
+        }
+
+        /* Masonry-style photo grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto;
+            gap: 12px;
+        }
+        .photo-grid .tall { grid-row: span 2; }
+
+        /* Hover photo zoom */
+        .photo-zoom { overflow: hidden; }
+        .photo-zoom img { 
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+        }
+        .photo-zoom:hover img { transform: scale(1.07); }
+
+        /* Stat card border glow */
+        .stat-card { 
+            border-left: 3px solid #d4af37;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        /* Process step connector */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            right: -50%;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, #d4af37, transparent);
+        }
+
+        /* Quote decoration */
+        .quote-mark {
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            line-height: 0.8;
+            color: #d4af37;
+            opacity: 0.15;
+        }
+
+        /* Reveal on scroll (JS-activated) */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 text-slate-800 antialiased">
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-md border-b border-slate-100 z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="#" class="flex items-center gap-3">
+                    <!-- Gold accent dot -->
+                    <span class="w-2 h-2 rounded-full bg-gold-500 block"></span>
+                    <span class="font-serif text-xl font-semibold tracking-tight text-navy-900">Suzan Gelen Sezgin</span>
+                </a>
+                <div class="hidden md:flex space-x-10 items-center">
+                    <a href="#hakkimda" class="text-sm font-medium text-slate-500 hover:text-navy-900 transition-colors">Hakkımda</a>
+                    <a href="#hizmetler" class="text-sm font-medium text-slate-500 hover:text-navy-900 transition-colors">Hizmetler</a>
+                    <a href="#surec" class="text-sm font-medium text-slate-500 hover:text-navy-900 transition-colors">Süreç</a>
+                    <a href="#iletisim" class="text-sm font-medium bg-navy-900 text-white px-6 py-2.5 rounded-sm hover:bg-navy-800 transition-colors shadow-sm">Talep Oluştur</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-900 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 px-4 pt-2 pb-6 shadow-xl absolute w-full">
+            <a href="#hakkimda" class="block px-3 py-3 text-base font-medium text-slate-600 border-b border-slate-50">Hakkımda</a>
+            <a href="#hizmetler" class="block px-3 py-3 text-base font-medium text-slate-600 border-b border-slate-50">Hizmetler</a>
+            <a href="#surec" class="block px-3 py-3 text-base font-medium text-slate-600 border-b border-slate-50">Süreç</a>
+            <a href="#iletisim" class="block px-3 py-3 text-base font-medium text-navy-900 mt-2 bg-slate-50 text-center">Talep Oluştur</a>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="relative h-screen min-h-[680px] flex items-center justify-center overflow-hidden">
+        <!-- Background with multiple layered images via pseudo-elements -->
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=1920&q=85" 
+                alt="Modern Pharmaceutical Laboratory" 
+                class="w-full h-full object-cover object-center scale-105"
+                style="transform-origin: center; animation: slowZoom 20s ease-in-out infinite alternate;"
+            />
+            <div class="hero-overlay absolute inset-0"></div>
+            <!-- Bottom gradient for smooth transition -->
+            <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-50 to-transparent"></div>
+        </div>
+
+        <!-- Decorative side image strip (desktop only) -->
+        <div class="absolute right-0 top-0 h-full w-1/4 hidden xl:block z-0 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=600&q=80" 
+                alt="Lab detail"
+                class="h-full w-full object-cover opacity-30"
+                style="clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);"
+            />
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+            <div class="max-w-3xl">
+                <span class="inline-flex items-center gap-3 text-gold-400 tracking-[0.25em] text-xs uppercase mb-8 fade-up font-medium">
+                    <span class="w-8 h-px bg-gold-500"></span>
+                    Farmasötik Ar-Ge & Mevzuat Uzmanı
+                </span>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 fade-up delay-100 leading-[1.1]">
+                    Suzan<br>Gelen Sezgin
+                </h1>
+                <p class="text-lg md:text-xl text-slate-300 font-light max-w-2xl mb-4 fade-up delay-200 leading-relaxed">
+                    Takviye Edici Gıda ve İlaç sektöründe bilimsel formülasyon çözümleri, endüstriyel scale-up stratejileri ve kusursuz mevzuat uyumu.
+                </p>
+                <p class="text-sm text-gold-400/80 mb-10 fade-up delay-300 font-light tracking-wide">
+                    Tarım ve Orman Bakanlığı ruhsatlandırma süreçlerinde güvenilir danışmanlık.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 fade-up delay-400">
+                    <a href="#iletisim" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-navy-900 font-medium rounded-sm hover:bg-slate-100 transition-colors text-sm uppercase tracking-widest">
+                        Projeyi Değerlendirelim
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#hizmetler" class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/30 text-white font-light rounded-sm hover:bg-white/10 transition-colors text-sm uppercase tracking-widest">
+                        Hizmetleri Keşfet
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/40 fade-up delay-400">
+            <span class="text-xs tracking-widest uppercase">Keşfet</span>
+            <div class="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
+        </div>
+    </section>
+
+    <style>
+        @keyframes slowZoom {
+            from { transform: scale(1.05); }
+            to { transform: scale(1.12); }
+        }
+    </style>
+
+    <!-- ========== STATS STRIP ========== -->
+    <section class="bg-navy-900 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-white text-center">
+                <div class="reveal">
+                    <div class="text-4xl font-serif font-semibold text-gold-400 mb-1">30+</div>
+                    <div class="text-xs text-white/50 uppercase tracking-widest">Yıl Deneyim</div>
+                </div>
+                <div class="reveal" style="transition-delay: 0.1s">
+                    <div class="text-4xl font-serif font-semibold text-gold-400 mb-1">50+</div>
+                    <div class="text-xs text-white/50 uppercase tracking-widest">Başarılı Proje</div>
+                </div>
+                <div class="reveal" style="transition-delay: 0.2s">
+                    <div class="text-4xl font-serif font-semibold text-gold-400 mb-1">100%</div>
+                    <div class="text-xs text-white/50 uppercase tracking-widest">Mevzuat Uyumu</div>
+                </div>
+                <div class="reveal" style="transition-delay: 0.3s">
+                    <div class="text-4xl font-serif font-semibold text-gold-400 mb-1">B2B</div>
+                    <div class="text-xs text-white/50 uppercase tracking-widest">Online Hizmet</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT / PHILOSOPHY ========== -->
+    <section id="hakkimda" class="py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                
+                <!-- Photo collage side -->
+                <div class="relative reveal">
+                    <!-- Main visual — lab glassware -->
+                    <div class="relative z-10 photo-zoom rounded-lg overflow-hidden shadow-2xl h-[520px]">
+                        <img 
+                            src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=800&q=85" 
+                            alt="Farmasötik Ar-Ge Laboratuvarı" 
+                            class="w-full h-full object-cover"
+                        />
+                        <!-- Subtle vignette -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/30 to-transparent"></div>
+                    </div>
+
+                    <!-- Floating accent photo – lab -->
+                    <div class="absolute -bottom-10 -right-10 w-52 h-52 photo-zoom rounded-lg overflow-hidden shadow-xl z-20 border-4 border-white reveal" style="transition-delay:0.2s">
+                        <img 
+                            src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=80" 
+                            alt="Laboratuvar" 
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+
+                    <!-- Floating accent photo – regulatory docs -->
+                    <div class="absolute -top-8 -right-8 w-36 h-36 photo-zoom rounded-lg overflow-hidden shadow-lg z-20 border-4 border-white reveal hidden md:block" style="transition-delay:0.3s">
+                        <img 
+                            src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=300&q=80" 
+                            alt="Mevzuat" 
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+
+                    <!-- Decorative geometric elements -->
+                    <div class="absolute -bottom-6 -left-6 w-48 h-48 bg-slate-100 rounded-lg -z-10 hidden md:block"></div>
+                    <div class="absolute -top-6 -left-6 w-24 h-24 border-2 border-gold-500/20 rounded-lg -z-10 hidden md:block"></div>
+                </div>
+                
+                <!-- Text Side -->
+                <div class="reveal" style="transition-delay:0.15s">
+                    <h2 class="text-xs font-semibold text-gold-600 tracking-widest uppercase mb-4 gold-line">Uzmanlık & Yaklaşım</h2>
+                    <h3 class="text-4xl md:text-5xl font-serif text-navy-900 mb-8 leading-tight">
+                        Bilimsel Mükemmellik,<br>
+                        <em>Yasal Güvence.</em>
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed mb-6 font-light text-lg">
+                        1994 yılında <strong class="font-medium text-navy-900">Yıldız Teknik Üniversitesi Kimya Mühendisliği</strong> bölümünden mezun oldum. 1995 yılından bu yana, 30 yılı aşkın bir deneyimle gıda takviyesi geliştirme üzerine formülasyon Ar-Ge ve üretim prosesleri alanında aktif olarak çalışmaktayım.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed mb-10 font-light text-lg">
+                        Likit sistemlerdeki <em>faz ayrımı</em> ve <em>çökelme</em> sorunlarını Stokes Yasası ve HLB optimizasyonu ile çözerken; tabletlerdeki basım ve capping sorunlarını doğru eksipiyan seçimiyle ortadan kaldırıyoruz. Sadece Ar-Ge laboratuvarında değil, Tarım ve Orman Bakanlığı ruhsatlandırma süreçlerinde de pürüzsüz ilerlemeniz için buradayım.
+                    </p>
+                    
+                    <!-- Expertise chips -->
+                    <div class="flex flex-wrap gap-2 mb-10">
+                        <span class="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded-full">Tablet & Likit Formülasyon</span>
+                        <span class="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded-full">HLB Optimizasyonu</span>
+                        <span class="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded-full">Scale-Up Stratejisi</span>
+                        <span class="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded-full">Bakanlık Ruhsatlandırma</span>
+                        <span class="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded-full">Novel Food</span>
+                        <span class="px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded-full">Sağlık Beyanları</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6 border-t border-slate-100 pt-8">
+                        <div class="stat-card pl-4 py-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="microscope" class="w-5 h-5 text-navy-900"></i>
+                                <h4 class="font-medium text-slate-900">Ar-Ge Çözümleri</h4>
+                            </div>
+                            <p class="text-sm text-slate-500 font-light">Tablet, Likit, Şase, Damla ve Emülsiyon sistemleri.</p>
+                        </div>
+                        <div class="stat-card pl-4 py-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="scale" class="w-5 h-5 text-navy-900"></i>
+                                <h4 class="font-medium text-slate-900">Mevzuat Uyumu</h4>
+                            </div>
+                            <p class="text-sm text-slate-500 font-light">Etiketleme, Yeni Gıda ve Sağlık Beyanları Yönetmeliği.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== VISUAL SHOWCASE (Photo Grid) ========== -->
+    <section class="py-20 bg-slate-900 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <h2 class="text-xs font-semibold text-gold-400 tracking-widest uppercase mb-3">Çalışma Alanlarımız</h2>
+                <h3 class="text-3xl md:text-4xl font-serif text-white">Laboratuvardan Üretime, Her Adımda Yanınızda</h3>
+            </div>
+
+            <!-- 3-column asymmetric grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 h-[520px] md:h-[600px] reveal" style="transition-delay:0.1s">
+                <!-- Tall left image -->
+                <div class="photo-zoom rounded-xl overflow-hidden row-span-2 col-span-1">
+                    <img 
+                        src="https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=600&q=80" 
+                        alt="Farmasötik Üretim"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <!-- Top right image -->
+                <div class="photo-zoom rounded-xl overflow-hidden">
+                    <img 
+                        src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" 
+                        alt="Ar-Ge Laboratuvarı"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <!-- Top far-right image (desktop only) -->
+                <div class="photo-zoom rounded-xl overflow-hidden hidden md:block">
+                    <img 
+                        src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=600&q=80" 
+                        alt="Kalite Kontrol"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <!-- Bottom right image -->
+                <div class="photo-zoom rounded-xl overflow-hidden">
+                    <img 
+                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" 
+                        alt="Üretim Süreci"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <!-- Bottom far-right (desktop only) -->
+                <div class="photo-zoom rounded-xl overflow-hidden hidden md:block">
+                    <img 
+                        src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=600&q=80" 
+                        alt="Mevzuat Süreçleri"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+            </div>
+
+            <!-- Caption bar -->
+            <div class="flex flex-wrap justify-center gap-8 mt-10 text-slate-400 text-xs uppercase tracking-widest reveal" style="transition-delay:0.2s">
+                <span>Formülasyon Ar-Ge</span>
+                <span class="text-gold-500">—</span>
+                <span>Endüstriyel Üretim</span>
+                <span class="text-gold-500">—</span>
+                <span>Kalite Kontrol</span>
+                <span class="text-gold-500">—</span>
+                <span>Mevzuat Uyumu</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SERVICES ========== -->
+    <section id="hizmetler" class="py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                <h2 class="text-xs font-semibold text-gold-600 tracking-widest uppercase mb-3 gold-line inline-block">Hizmetler</h2>
+                <h3 class="text-4xl md:text-5xl font-serif text-navy-900 mb-6">Profesyonel Danışmanlık</h3>
+                <p class="text-slate-500 font-light">Formülasyon geliştirmeden ruhsatlandırmaya, bilimsel mükemmelliği iş süreçlerinize entegre ediyoruz.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="group rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-2xl transition-all duration-500 reveal">
+                    <div class="relative h-64 photo-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80" 
+                            alt="Formülasyon Ar-Ge" 
+                            class="w-full h-full object-cover"
+                        />
+                        <!-- Category label overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent flex items-end p-6">
+                            <span class="text-white/70 text-xs uppercase tracking-widest">Hizmet 01</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-navy-900/5 rounded-full flex items-center justify-center">
+                                <i data-lucide="flask-conical" class="w-5 h-5 text-navy-900"></i>
+                            </div>
+                            <h4 class="text-xl font-serif text-navy-900">Formülasyon Ar-Ge</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 font-light">
+                            Likit, şurup ve damlalarda zeytinyağı, MCT veya Omega-3 kullanımında emülsiyon stabilitesi. Şaselerde higroskopik sorunların çözümü ve doğru eksipiyan dengesi.
+                        </p>
+                        <ul class="space-y-2.5 text-sm text-slate-500 font-light">
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                HLB & Stokes Optimizasyonu
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Tat Maskeleme ve Berraklık
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Şase & Emülsiyon Sistemleri
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="group rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-2xl transition-all duration-500 reveal" style="transition-delay:0.15s">
+                    <div class="relative h-64 photo-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" 
+                            alt="Üretim ve Scale-up" 
+                            class="w-full h-full object-cover"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent flex items-end p-6">
+                            <span class="text-white/70 text-xs uppercase tracking-widest">Hizmet 02</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-navy-900/5 rounded-full flex items-center justify-center">
+                                <i data-lucide="factory" class="w-5 h-5 text-navy-900"></i>
+                            </div>
+                            <h4 class="text-xl font-serif text-navy-900">Üretim & Scale-Up</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 font-light">
+                            Laboratuvar ortamında onaylanan pilot reçetelerin endüstriyel kazanlara ve tablet preslerine kusursuz adaptasyonu. Verimlilik analizi ve fason üretici yönetimi.
+                        </p>
+                        <ul class="space-y-2.5 text-sm text-slate-500 font-light">
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Endüstriyel Reçete Optimizasyonu
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Proses Validasyonu
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Fason Üretici Koordinasyonu
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="group rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-2xl transition-all duration-500 reveal" style="transition-delay:0.3s">
+                    <div class="relative h-64 photo-zoom">
+                        <img 
+                            src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80" 
+                            alt="Mevzuat Danışmanlığı" 
+                            class="w-full h-full object-cover"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent flex items-end p-6">
+                            <span class="text-white/70 text-xs uppercase tracking-widest">Hizmet 03</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-navy-900/5 rounded-full flex items-center justify-center">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-navy-900"></i>
+                            </div>
+                            <h4 class="text-xl font-serif text-navy-900">Mevzuat & Ruhsat</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 font-light">
+                            Tarım ve Orman Bakanlığı yönetmeliklerine %100 uyum. Maksimum Limit (ML) hesaplamaları, Kısıtlı Maddeler ve Sağlık Beyanı entegrasyonu.
+                        </p>
+                        <ul class="space-y-2.5 text-sm text-slate-500 font-light">
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Etiket ve Ambalaj Denetimi
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                Yeni Gıda (Novel Food) İncelemesi
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0"></span>
+                                ML Hesaplama & Kısıtlı Maddeler
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== QUOTE / PHILOSOPHY BANNER ========== -->
+    <section class="relative py-24 overflow-hidden">
+        <!-- Full-bleed background -->
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=1920&q=80" 
+                alt="Laboratory Background" 
+                class="w-full h-full object-cover object-center"
+            />
+            <div class="absolute inset-0 bg-navy-900/85"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <div class="quote-mark leading-none mb-0 select-none">"</div>
+            <blockquote class="text-2xl md:text-3xl font-serif text-white leading-relaxed -mt-8 mb-8">
+                Bilim ve mevzuat arasındaki köprüyü kurarız;<br class="hidden md:block"> ürününüz güvenli, etkili ve yasal yolculuğuna çıkar.
+            </blockquote>
+            <div class="flex items-center justify-center gap-4">
+                <div class="w-12 h-px bg-gold-500"></div>
+                <span class="text-gold-400 font-medium text-sm tracking-wide">Suzan Gelen Sezgin</span>
+                <div class="w-12 h-px bg-gold-500"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PROCESS STEPS ========== -->
+    <section id="surec" class="py-28 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-20 reveal">
+                <h2 class="text-xs font-semibold text-gold-600 tracking-widest uppercase mb-3 gold-line inline-block">Nasıl Çalışıyoruz?</h2>
+                <h3 class="text-4xl font-serif text-navy-900 mb-4">Danışmanlık Sürecimiz</h3>
+                <p class="text-slate-500 font-light">Başvurudan sonuçlara kadar şeffaf, verimli ve bilimsel bir süreç yönetimi.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="reveal text-center group">
+                    <div class="relative mb-6">
+                        <div class="w-16 h-16 rounded-full bg-navy-900 text-white flex items-center justify-center mx-auto text-xl font-serif font-semibold group-hover:bg-gold-500 transition-colors duration-300">1</div>
+                        <!-- Connector line (visible on md+) -->
+                        <div class="hidden md:block absolute top-8 left-[60%] w-full h-px bg-gradient-to-r from-slate-300 to-transparent -z-0"></div>
+                    </div>
+                    <div class="photo-zoom rounded-lg overflow-hidden h-36 mb-5 shadow-md">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80" alt="İlk Değerlendirme" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-serif text-navy-900 text-lg mb-2">İlk Değerlendirme</h4>
+                    <p class="text-slate-500 text-sm font-light leading-relaxed">Projenizin kapsamı ve ihtiyaçları netleştirilir.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="reveal text-center group" style="transition-delay:0.1s">
+                    <div class="relative mb-6">
+                        <div class="w-16 h-16 rounded-full bg-navy-900 text-white flex items-center justify-center mx-auto text-xl font-serif font-semibold group-hover:bg-gold-500 transition-colors duration-300">2</div>
+                        <div class="hidden md:block absolute top-8 left-[60%] w-full h-px bg-gradient-to-r from-slate-300 to-transparent -z-0"></div>
+                    </div>
+                    <div class="photo-zoom rounded-lg overflow-hidden h-36 mb-5 shadow-md">
+                        <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=80" alt="Ar-Ge Çalışması" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-serif text-navy-900 text-lg mb-2">Ar-Ge & Analiz</h4>
+                    <p class="text-slate-500 text-sm font-light leading-relaxed">Formülasyon ve mevzuat analizleri gerçekleştirilir.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="reveal text-center group" style="transition-delay:0.2s">
+                    <div class="relative mb-6">
+                        <div class="w-16 h-16 rounded-full bg-navy-900 text-white flex items-center justify-center mx-auto text-xl font-serif font-semibold group-hover:bg-gold-500 transition-colors duration-300">3</div>
+                        <div class="hidden md:block absolute top-8 left-[60%] w-full h-px bg-gradient-to-r from-slate-300 to-transparent -z-0"></div>
+                    </div>
+                    <div class="photo-zoom rounded-lg overflow-hidden h-36 mb-5 shadow-md">
+                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80" alt="Üretim" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-serif text-navy-900 text-lg mb-2">Optimizasyon</h4>
+                    <p class="text-slate-500 text-sm font-light leading-relaxed">Scale-up ve üretim sürecinin validasyonu.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="reveal text-center group" style="transition-delay:0.3s">
+                    <div class="relative mb-6">
+                        <div class="w-16 h-16 rounded-full bg-navy-900 text-white flex items-center justify-center mx-auto text-xl font-serif font-semibold group-hover:bg-gold-500 transition-colors duration-300">4</div>
+                    </div>
+                    <div class="photo-zoom rounded-lg overflow-hidden h-36 mb-5 shadow-md">
+                        <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=400&q=80" alt="Onay" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-serif text-navy-900 text-lg mb-2">Ruhsatlandırma</h4>
+                    <p class="text-slate-500 text-sm font-light leading-relaxed">Bakanlık onayı ve pazara çıkış desteği.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== WHY ME — Split Photo Section ========== -->
+    <section class="bg-white py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-2xl">
+                <!-- Photo half -->
+                <div class="relative h-80 lg:h-auto photo-zoom min-h-[400px]">
+                    <img 
+                        src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=900&q=85" 
+                        alt="Neden Suzan Gelen Sezgin?" 
+                        class="w-full h-full object-cover"
+                    />
+                    <div class="absolute inset-0 bg-navy-900/30"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <div class="text-6xl font-serif font-semibold text-gold-400 opacity-80">SGS</div>
+                        <div class="text-xs uppercase tracking-widest text-white/60 mt-1">Suzan Gelen Sezgin</div>
+                    </div>
+                </div>
+
+                <!-- Content half -->
+                <div class="bg-navy-900 p-12 lg:p-16 text-white reveal">
+                    <h2 class="text-xs font-semibold text-gold-400 tracking-widest uppercase mb-4 gold-line">Neden Ben?</h2>
+                    <h3 class="text-3xl md:text-4xl font-serif mb-8 leading-tight">Tek Temas Noktası,<br>Tam Çözüm.</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4 group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full border border-gold-500/30 flex items-center justify-center group-hover:bg-gold-500/10 transition-colors">
+                                <i data-lucide="layers" class="w-5 h-5 text-gold-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-white mb-1">Uçtan Uca Hizmet</h4>
+                                <p class="text-slate-400 text-sm font-light leading-relaxed">Formülasyondan etiketlemeye, tek bir uzmanla tüm süreç yönetimi.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full border border-gold-500/30 flex items-center justify-center group-hover:bg-gold-500/10 transition-colors">
+                                <i data-lucide="zap" class="w-5 h-5 text-gold-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-white mb-1">Hızlı & Verimli</h4>
+                                <p class="text-slate-400 text-sm font-light leading-relaxed">Darboğazları önceden tespit eder, zaman ve maliyet tasarrufu sağlarız.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full border border-gold-500/30 flex items-center justify-center group-hover:bg-gold-500/10 transition-colors">
+                                <i data-lucide="shield" class="w-5 h-5 text-gold-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-white mb-1">%100 Mevzuat Güvencesi</h4>
+                                <p class="text-slate-400 text-sm font-light leading-relaxed">Bakanlık yönetmelikleriyle birebir uyumlu, hukuki risk sıfır.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full border border-gold-500/30 flex items-center justify-center group-hover:bg-gold-500/10 transition-colors">
+                                <i data-lucide="laptop" class="w-5 h-5 text-gold-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-white mb-1">Esnek Online Model</h4>
+                                <p class="text-slate-400 text-sm font-light leading-relaxed">Türkiye genelinde, ofis sınırı olmaksızın dijital platformlarda erişilebilir.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="iletisim" class="py-28 bg-slate-50 relative overflow-hidden">
+        <!-- Background photo with very low opacity -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <img 
+                src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=1920&q=60" 
+                alt="" 
+                class="w-full h-full object-cover opacity-5"
+            />
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-5 gap-16">
+                
+                <!-- Contact Info -->
+                <div class="lg:col-span-2 reveal">
+                    <h2 class="text-xs font-semibold text-gold-600 tracking-widest uppercase mb-3 gold-line">İletişim</h2>
+                    <h3 class="text-4xl md:text-5xl font-serif text-navy-900 mb-6">Projenizi<br>Konuşalım</h3>
+                    <p class="text-slate-500 font-light leading-relaxed mb-10">
+                        Formülasyon süreçlerinde karşılaştığınız darboğazları aşmak, mevzuat uyumunu garantilemek veya yeni ürün geliştirmek için detayları paylaşın.
+                    </p>
+
+                    <!-- Contact cards -->
+                    <div class="space-y-4">
+                        <a href="mailto:suzangelensezgin@gmail.com" class="flex items-center gap-4 p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group border border-slate-100">
+                            <div class="w-10 h-10 bg-navy-900/5 rounded-full flex items-center justify-center group-hover:bg-navy-900 transition-colors">
+                                <i data-lucide="mail" class="w-5 h-5 text-navy-900 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase tracking-wider mb-0.5">E-posta</p>
+                                <p class="text-sm font-medium text-slate-800">suzangelensezgin@gmail.com</p>
+                            </div>
+                        </a>
+                        <a href="tel:05325809035" class="flex items-center gap-4 p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group border border-slate-100">
+                            <div class="w-10 h-10 bg-navy-900/5 rounded-full flex items-center justify-center group-hover:bg-navy-900 transition-colors">
+                                <i data-lucide="phone" class="w-5 h-5 text-navy-900 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase tracking-wider mb-0.5">Telefon</p>
+                                <p class="text-sm font-medium text-slate-800">0532 580 90 35</p>
+                            </div>
+                        </a>
+                        <div class="flex items-center gap-4 p-5 bg-white rounded-xl shadow-sm border border-slate-100">
+                            <div class="w-10 h-10 bg-navy-900/5 rounded-full flex items-center justify-center">
+                                <i data-lucide="laptop" class="w-5 h-5 text-navy-900"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400 uppercase tracking-wider mb-0.5">Çalışma Modeli</p>
+                                <p class="text-sm font-medium text-slate-800">Yalnızca online hizmet</p>
+                                <p class="text-xs text-slate-400">(Fiziki ofis bulunmamaktadır)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Panel -->
+                <div class="lg:col-span-3 reveal" style="transition-delay:0.15s">
+                    <div class="bg-white rounded-2xl p-8 sm:p-12 shadow-xl border border-slate-100">
+                        <h4 class="text-xl font-serif text-navy-900 mb-8">Danışmanlık Talebi Oluşturun</h4>
+                        <form id="lead-form" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="fullName" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Ad Soyad <span class="text-red-400">*</span></label>
+                                    <input type="text" id="fullName" required class="w-full px-0 py-3 border-0 border-b-2 border-slate-100 focus:ring-0 focus:border-navy-900 outline-none transition-all text-slate-900 bg-transparent rounded-none text-sm">
+                                </div>
+                                <div>
+                                    <label for="company" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Firma Adı <span class="text-red-400">*</span></label>
+                                    <input type="text" id="company" required class="w-full px-0 py-3 border-0 border-b-2 border-slate-100 focus:ring-0 focus:border-navy-900 outline-none transition-all text-slate-900 bg-transparent rounded-none text-sm">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="email" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">E-posta <span class="text-red-400">*</span></label>
+                                    <input type="email" id="email" required class="w-full px-0 py-3 border-0 border-b-2 border-slate-100 focus:ring-0 focus:border-navy-900 outline-none transition-all text-slate-900 bg-transparent rounded-none text-sm">
+                                </div>
+                                <div>
+                                    <label for="requestType" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Hizmet Türü <span class="text-red-400">*</span></label>
+                                    <select id="requestType" required class="w-full px-0 py-3 border-0 border-b-2 border-slate-100 focus:ring-0 focus:border-navy-900 outline-none transition-all text-slate-900 bg-transparent rounded-none cursor-pointer text-sm">
+                                        <option value="" disabled selected>Seçiniz...</option>
+                                        <option value="Ar-Ge (Tablet/Likit/Şase)">Formülasyon Ar-Ge (Tablet/Likit/Şase)</option>
+                                        <option value="Scale-Up / Üretim Sorunu">Scale-Up / Üretim Sorunları</option>
+                                        <option value="Mevzuat & Ruhsatlandırma">Mevzuat & Ruhsatlandırma</option>
+                                        <option value="Diğer">Diğer</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="message" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Proje Detayı <span class="text-red-400">*</span></label>
+                                <textarea id="message" rows="4" required placeholder="Lütfen talebinizi kısaca özetleyin..." class="w-full px-0 py-3 border-0 border-b-2 border-slate-100 focus:ring-0 focus:border-navy-900 outline-none transition-all resize-none text-slate-900 bg-transparent rounded-none text-sm placeholder-slate-300"></textarea>
+                            </div>
+
+                            <div class="flex items-start gap-3 pt-2">
+                                <div class="flex items-center h-5 mt-0.5">
+                                    <input id="kvkk" type="checkbox" required class="w-4 h-4 border-2 border-slate-300 rounded-sm bg-white checked:bg-navy-900 checked:border-navy-900 focus:ring-2 focus:ring-navy-900/20 transition-all cursor-pointer">
+                                </div>
+                                <label for="kvkk" class="text-xs text-slate-400 font-light leading-relaxed cursor-pointer">
+                                    <a href="#" class="text-navy-900 font-medium hover:underline">KVKK Aydınlatma Metni</a>'ni okuduğumu ve iletişim amacıyla verilerimin işlenmesini kabul ettiğimi beyan ederim. <span class="text-red-400">*</span>
+                                </label>
+                            </div>
+
+                            <button type="submit" id="submitBtn" class="w-full bg-navy-900 text-white font-medium py-4 px-4 rounded-sm hover:bg-navy-800 transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-xs mt-2 group">
+                                <span>Talebi Gönder</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-navy-900 py-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-gold-500 block"></span>
+                    <span class="font-serif text-xl font-semibold tracking-tight text-white">Suzan Gelen Sezgin</span>
+                </a>
+
+                <!-- Nav links -->
+                <div class="flex items-center gap-8 text-xs text-white/40 uppercase tracking-widest">
+                    <a href="#hakkimda" class="hover:text-white transition-colors">Hakkımda</a>
+                    <a href="#hizmetler" class="hover:text-white transition-colors">Hizmetler</a>
+                    <a href="#surec" class="hover:text-white transition-colors">Süreç</a>
+                    <a href="#iletisim" class="hover:text-white transition-colors">İletişim</a>
+                </div>
+                
+                <p class="text-xs text-white/30 font-light text-center">
+                    &copy; 2026 Suzan Gelen Sezgin. Tüm hakları saklıdır.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== NOTIFICATION MODAL ========== -->
+    <div id="notification-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 hidden">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" id="modal-backdrop"></div>
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl z-10 transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5" id="modal-icon-container"></div>
+            <h3 class="text-xl font-serif text-center text-navy-900 mb-2" id="modal-title">Başlık</h3>
+            <p class="text-center text-slate-500 text-sm mb-8 font-light" id="modal-message">Mesaj.</p>
+            <button onclick="closeModal()" class="w-full bg-navy-900 text-white font-medium py-3 px-4 rounded-sm hover:bg-navy-800 transition-colors text-xs uppercase tracking-wider">
+                Kapat
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Init icons
+        lucide.createIcons();
+
+        // Mobile menu
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+
+        // Scroll reveal
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => observer.observe(el));
+
+        // Modal
+        const modal = document.getElementById('notification-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        window.closeModal = () => {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        function showNotification(type, title, message) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            const iconContainer = document.getElementById('modal-icon-container');
+            if (type === 'success') {
+                iconContainer.className = 'w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5 bg-emerald-50 text-emerald-600';
+                iconContainer.innerHTML = '<i data-lucide="check" class="w-6 h-6"></i>';
+            } else {
+                iconContainer.className = 'w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-5 bg-red-50 text-red-600';
+                iconContainer.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+            }
+            lucide.createIcons();
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }
+
+        // Firebase
+        let app, db, auth;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch (error) {
+            console.error("Firebase init err:", error);
+        }
+
+        // Form submission
+        const form = document.getElementById('lead-form');
+        const submitBtn = document.getElementById('submitBtn');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!document.getElementById('kvkk').checked) return;
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin mx-auto"></i>';
+            lucide.createIcons();
+            try {
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                if (!auth.currentUser) throw new Error("Auth failed");
+                const requestsRef = collection(db, 'artifacts', appId, 'public', 'data', 'consulting_requests');
+                await addDoc(requestsRef, {
+                    fullName: document.getElementById('fullName').value.trim(),
+                    company: document.getElementById('company').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    requestType: document.getElementById('requestType').value,
+                    message: document.getElementById('message').value.trim(),
+                    timestamp: serverTimestamp(),
+                    status: 'new'
+                });
+                showNotification('success', 'Talebiniz Alındı', 'Danışmanlık talebiniz başarıyla iletildi. Sizinle en kısa sürede iletişime geçeceğim.');
+                form.reset();
+            } catch (error) {
+                console.error(error);
+                showNotification('error', 'İşlem Başarısız', 'Bir sorun oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyin.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+    </script>
+</body>
+</html>
